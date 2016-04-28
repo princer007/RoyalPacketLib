@@ -29,9 +29,7 @@ namespace RoyalPacketLib
             try
             {
                 foreach (var v in packetsMetadata[packet.Header])
-                {
                     v.SetValue(packet, packet.ReadInternal(v.PropertyType), null);
-                }
             }
             catch (KeyNotFoundException)
             { throw new ArgumentException("Current packet is not registered in PacketManager: " + packet.Header); }
