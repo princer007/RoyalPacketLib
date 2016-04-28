@@ -8,13 +8,12 @@ namespace RoyalPacketLib
         private byte[] content;
         private int pointer;
 
-        public UInt32 Header { get; set; }
+        public UInt32 Header { get; set; } // "Recognizer" (c)
 
         public Packet(byte[] content)
         {
             this.content = content;
             Header = ReadUInt32();
-            pointer = 0;
         }
 
         public void Flush()
@@ -145,6 +144,51 @@ namespace RoyalPacketLib
 
         //Write
 
+        public void WriteInternal(object content)
+        {
+            switch (Type.GetTypeCode(content.GetType()))
+            {
+                case TypeCode.Boolean:
+                    Write((bool)content);
+                    break;
+                case TypeCode.Byte:
+                    Write((byte)content);
+                    break;
+                case TypeCode.Char:
+                    Write((char)content);
+                    break;
+                case TypeCode.Decimal:
+                    Write((float)content);
+                    break;
+                case TypeCode.Double:
+                    Write((double)content);
+                    break;
+                case TypeCode.Int16:
+                    Write((Int16)content);
+                    break;
+                case TypeCode.Int32:
+                    Write((Int32)content);
+                    break;
+                case TypeCode.Int64:
+                    Write((Int64)content);
+                    break;
+                case TypeCode.UInt16:
+                    Write((UInt16)content);
+                    break;
+                case TypeCode.UInt32:
+                    Write((UInt32)content);
+                    break;
+                case TypeCode.UInt64:
+                    Write((UInt64)content);
+                    break;
+                case TypeCode.String:
+                    Write((string)content);
+                    break;
+                default:
+                    throw new ArgumentException("Packet contains unapproptiate field type: " + content.GetType());
+            }
+        }
+
         public void Write(string content)
         {
             byte[] temp = new byte[content.Length];
@@ -153,7 +197,11 @@ namespace RoyalPacketLib
                 temp[i++] = (byte)c;
             ContentUpdater(temp);
         }
-        public void Write(int content)
+        public void Write(char content)
+        {
+            ContentUpdater(new byte[] { (byte)content });
+        }
+        public void Write(bool content)
         {
             ContentUpdater(BitConverter.GetBytes(content));
         }
@@ -161,7 +209,31 @@ namespace RoyalPacketLib
         {
             ContentUpdater(BitConverter.GetBytes(content));
         }
+        public void Write(float content)
+        {
+            ContentUpdater(BitConverter.GetBytes(content));
+        }
+        public void Write(Int16 content)
+        {
+            ContentUpdater(BitConverter.GetBytes(content));
+        }
+        public void Write(Int32 content)
+        {
+            ContentUpdater(BitConverter.GetBytes(content));
+        }
+        public void Write(Int64 content)
+        {
+            ContentUpdater(BitConverter.GetBytes(content));
+        }
         public void Write(UInt16 content)
+        {
+            ContentUpdater(BitConverter.GetBytes(content));
+        }
+        public void Write(UInt32 content)
+        {
+            ContentUpdater(BitConverter.GetBytes(content));
+        }
+        public void Write(UInt64 content)
         {
             ContentUpdater(BitConverter.GetBytes(content));
         }
