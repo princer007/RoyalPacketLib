@@ -24,18 +24,17 @@ namespace RoyalPacketLib
         {
             T packet = (T)Activator.CreateInstance(typeof(T), content);
             /*
+                Convert.ChangeType(packet, registeredPackets[packet.Header]);
+            */
             try
             {
-                Convert.ChangeType(packet, registeredPackets[packet.Header]);
+                foreach (var v in packetsMetadata[packet.Header])
+                {
+                    v.SetValue(packet, packet.ReadInternal(v.PropertyType), null);
+                }
             }
-            catch(KeyNotFoundException)
-            { throw new ArgumentException("Current packet is not registered in PacketManager: "+p.Header); }
-            */
-            foreach (var v in packetsMetadata[packet.Header])
-            {
-                //Console.WriteLine(v.Name);
-                v.SetValue(packet, packet.ReadInternal(v.PropertyType), null);
-            }
+            catch (KeyNotFoundException)
+            { throw new ArgumentException("Current packet is not registered in PacketManager: " + packet.Header); }
             packet.Flush();
 
             return packet;
