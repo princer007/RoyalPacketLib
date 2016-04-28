@@ -11,11 +11,11 @@ namespace RoyalPacketLib
         static Dictionary<uint, PropertyInfo[]> packetsMetadata = new Dictionary<uint, PropertyInfo[]>();
         static Type packetType = typeof(Packet);
 
-        static public void RegisterPacket <T>(uint header)
+        static public void RegisterPacket<T>(uint header) where T : Packet
         {
             Type t = typeof(T);
-            if (!t.IsSubclassOf(packetType))
-                throw new ArgumentException("T should inherit class Packet");
+            //if (!t.IsSubclassOf(packetType))
+                //throw new ArgumentException("T should inherit class Packet");
             registeredPackets.Add(header, t);
             packetsMetadata.Add(header, t.GetProperties().Where(x => x.CanWrite).ToArray());
         }
